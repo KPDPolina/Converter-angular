@@ -1,0 +1,57 @@
+ <div class="converter">
+
+    <h1>Конвертер Валют</h1>
+    
+    <div class="rates-tabel">
+        <div class="rates-elem">
+            <div class="rates-name">Курс {{rates[1][0]}}</div>
+            <div class="rates-value">{{rates[1][1]}}</div>
+        </div>
+        
+        <div class="rates-elem">
+            <div class="rates-name">Курс {{rates[2][0]}}</div>
+            <div class="rates-value">{{rates[2][1]}}</div>
+        </div>
+        
+        <div class="rates-elem">
+            <div class="rates-name">Курс {{previousRate[0]}}</div>
+            <div class="rates-value">{{previousRate[1]}}</div>
+        </div>
+
+    </div>
+    
+    <div class="converter-tabel">
+        <div class="converter-buy">
+            <h3>Покупка</h3>
+
+            <div class="converter-tabel-elem">
+                <input type="number" class="converter-input" [(ngModel)]="input1" (input)="updateInput2()" />
+            </div>
+
+            <div class="converter-tabel-elem">
+                <select #mySelect1 class="converter-select" (input)="onSelected1(mySelect1.value)">
+                    <option *ngFor="let item of rates" value={{item[1]}}>{{item[0]}}</option>
+                </select>
+            </div>
+            
+        </div>
+
+        <div class="converter-sell">
+            <h3>Продажа</h3>
+
+            <div class="converter-tabel-elem">
+                <input type="number" class="converter-input" [(ngModel)]="input2" (input)="updateInput1()" />
+            </div>
+
+            <div class="converter-tabel-elem">
+                <select #mySelect2 class="converter-select" (input)="onSelected2(mySelect2.value)">
+                    <option *ngFor="let item of rates" value={{item[1]}}>{{item[0]}}</option>
+                </select>
+            </div>
+            
+        </div>
+    </div>
+
+    <br><br>
+
+</div>

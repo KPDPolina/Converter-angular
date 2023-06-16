@@ -1,0 +1,75 @@
+h1{
+    color:rgb(55, 55, 59);
+}
+
+div{
+    margin: 1px;
+}
+
+.converter{
+    margin: 20px auto;
+    border: 1px solid rgb(179, 179, 179);
+    width: max-content;
+    height: max-content;
+    padding: 10px;
+    text-align: center;
+    position: relative;
+    
+}
+
+.rates-tabel{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: max-content;
+}
+
+.rates-elem{
+    padding: 15px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.308);
+    margin: 10px;
+}
+
+.rates-name{
+    font-weight: 600;
+    font-size: 17px;
+}
+
+.rates-value{
+    font-size: 20px;
+}
+
+.converter-tabel{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.converter-buy{
+    display: block;
+    color: darkgreen;
+}
+
+.converter-sell{
+    display: block;
+    color:brown;
+}
+
+.converter-tabel-elem{
+    margin: 10px;
+}
+
+.converter-input{
+    margin: 1px;
+    width: 150px;
+    height: 30px;
+    border-radius: 5px;
+}
+
+.converter-select{
+    margin: 1px;
+    width: 150px;
+    height: 30px;
+    border-radius: 5px;
+}
+
