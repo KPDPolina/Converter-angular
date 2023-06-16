@@ -2,5 +2,5 @@
 Currency converter written in Angular with third party API
 
 # Commands to run the application
-npm init
+npm init ; 
 ng server --open
