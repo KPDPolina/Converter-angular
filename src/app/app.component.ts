@@ -1,92 +1,80 @@
 import { Component, OnInit  } from '@angular/core';
+import { ApiService } from './api.service';
 
-// Функция принимает число currencyNum; забирает с АПИ json; Находит элемент(является объектом) массива по номеру currencyNum; отдает 2 значения из найденого объекта.
-async function getCurrency(currencyNum: number) { 
-
-    const response = await fetch('https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange?json'); 
-    const data = await response.json(); 
-    const result = data[currencyNum]; 
-    return  [result.cc, result.rate];
-} 
-
-// Собирает инфу о нужных валютах и отдает их в виде массива.
-async function getAllCurrency() {
-
-    let currency = [["UAH", 1]];
-    const cur1 = await getCurrency(24);
-    currency.push(cur1);
-    const cur2 = await getCurrency(31);
-    currency.push(cur2);
-
-    for (let i = 5; i < 17; i++) {
-        const cur = await getCurrency(i);
-        currency.push(cur);
-    }
-
-    return currency;
-}
-
-function foundIndex(arrayOfArrays:Array<any>, targetValue: number) {
+function foundIndex(arrayOfArrays:Array<Array<string | number>>, targetValue: number) {
     let fIndex = -1;
+    let i = -1;
     targetValue = Number(targetValue)
 
-    for (let i = 0; i < arrayOfArrays.length; i++) {
-        const subArray = arrayOfArrays[i];
-        
-        for (let j = 0; j < subArray.length; j++) {
-            const element = subArray[j];
-          
+    arrayOfArrays.forEach(subArray => {
+        i++;
+        subArray.forEach(element => {
             if (element === targetValue) {
                 fIndex = i;
-                break;
             }
+        });
+        if(fIndex !== -1){
+            return -1;
         }
-        
-        if (fIndex !== -1) {
-            break;
-        }
-    }
+    })
     return fIndex;
 }
-
 
 @Component({
     selector: 'my-app',
     templateUrl: './app.component.html',
-    styleUrls: ['./app.component.css']
+    styleUrls: ['./app.component.css'],
+    providers: [ApiService]
 })
 
 export class AppComponent implements OnInit { 
 
-    previousRate: Array<any> = ["UAH", 1];
-
     select1: number = 1;
     select2: number = 1;
-    input1: number;
+    input1: number = 10;
     input2: number;
-    rates: Array<any> = [["UAH", 1]];
+    rates: Array<Array<string | number>> = [["UAH", 1]];
+    previousRate: Array<string | number> = this.rates[0]; 
 
+    constructor(private apiService: ApiService) {}
+    
     ngOnInit () {
-        (async () => {
-          const data = await getAllCurrency();
-            this.rates = data;
-        })();
-        
+        this.getDataFromApi();
+    }
+
+    getDataFromApi(): void {
+        this.apiService.getData().subscribe(
+          (response) => {
+            console.log("response", response)
+            response.forEach(element => {
+                const currency = [element.cc, element.rate];
+                this.rates.push(currency)                
+            });
+            console.log("rates", this.rates)
+
+          },
+          (error) => {
+            console.error('An error occurred:', error);
+          }
+        );
+      }
+
+
+    newPreviousRate(value:number): void {
+        let i = foundIndex(this.rates, value);
+        this.previousRate = this.rates[i];
     }
 
     onSelected1(value:number): void {
         this.select1 = value;
-        let i = foundIndex(this.rates, value);
-        this.previousRate = this.rates[i];
-        this.input2 = parseFloat(((this.input1 * this.select1) / this.select2).toFixed(4));
+        this.newPreviousRate(value)
+        this.updateInput2()
     }
     onSelected2(value:number): void {
         this.select2 = value;
-        let i = foundIndex(this.rates, value);
-        this.previousRate = this.rates[i];
-        this.input1 = parseFloat(((this.input2 * this.select2) / this.select1).toFixed(4));
+        this.newPreviousRate(value)
+        this.updateInput1()
     }
-
     updateInput2() {
         this.input2 = parseFloat(((this.input1 * this.select1) / this.select2).toFixed(4));
     }
