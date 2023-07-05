@@ -1,25 +1,7 @@
 import { Component, OnInit} from '@angular/core';
 import { ApiService } from './api.service';
 import { FormGroup, FormBuilder } from '@angular/forms';
-
-function foundIndex(arrayOfArrays:Array<Array<string | number>>, targetValue: number) {
-    let fIndex = -1;
-    let i = -1;
-    targetValue = Number(targetValue)
-
-    arrayOfArrays.forEach(subArray => {
-        i++;
-        subArray.forEach(element => {
-            if (element === targetValue) {
-                fIndex = i;
-            }
-        });
-        if(fIndex !== -1){
-            return -1;
-        }
-    })
-    return fIndex;
-}
+import {foundIndex } from './utils/service'; 
 
 @Component({
     selector: 'my-app',
@@ -70,46 +52,30 @@ export class AppComponent implements OnInit {
 
         this.myForm.controls.select1.valueChanges.subscribe(() => {
             this.updatePreviousRate(this.myForm.controls.select1.value);
-            this.updateInput2Value();
+            this.updateInputValue(this.myForm.controls.input1.value, this.myForm.controls.input2, this.myForm.controls.select1.value, this.myForm.controls.select2.value);
         });
     
         this.myForm.controls.select2.valueChanges.subscribe(() => {
             this.updatePreviousRate(this.myForm.controls.select2.value);
-            this.updateInput1Value();
+            this.updateInputValue(this.myForm.controls.input2.value, this.myForm.controls.input1, this.myForm.controls.select2.value, this.myForm.controls.select1.value);
         });
     
         this.myForm.controls.input1.valueChanges.subscribe(() => {
-            this.updateInput2Value();
+            this.updateInputValue(this.myForm.controls.input1.value, this.myForm.controls.input2, this.myForm.controls.select1.value, this.myForm.controls.select2.value);
         });
     
         this.myForm.controls.input2.valueChanges.subscribe(() => {
-            this.updateInput1Value();
+            this.updateInputValue(this.myForm.controls.input2.value, this.myForm.controls.input1, this.myForm.controls.select2.value, this.myForm.controls.select1.value);
         });
+
     }
 
-    updateInput2Value(): void {
-        const input1Value: number = this.myForm.controls.input1.value;
-        const select1Value: number = this.myForm.controls.select1.value;
-        const select2Value: number = this.myForm.controls.select2.value;
-    
-        if (input1Value && select1Value && select2Value) {
-            const calculatedValue: number = parseFloat(((input1Value * select1Value) / select2Value).toFixed(4));
-            this.myForm.controls.input2.setValue(calculatedValue);} 
+    updateInputValue(inputValue1, inputValue2, selectValue1, selectValue2 ): void {
+        if (inputValue1 && selectValue1 && selectValue2) {
+            const calculatedValue: number = parseFloat(((inputValue1 * selectValue1) / selectValue2).toFixed(4));
+            inputValue2.setValue(calculatedValue);} 
             else {
-            this.myForm.controls.input2.setValue(null);
-        }
-    }
-    
-    updateInput1Value(): void {
-        const input2Value: number = this.myForm.controls.input2.value;
-        const select1Value: number = this.myForm.controls.select1.value;
-        const select2Value: number = this.myForm.controls.select2.value;
-    
-        if (input2Value && select1Value && select2Value) {
-            const calculatedValue: number = parseFloat(((input2Value * select2Value) / select1Value).toFixed(4));
-            this.myForm.controls.input1.setValue(calculatedValue);}
-            else {
-            this.myForm.controls.input1.setValue(null);
+                inputValue2.setValue(null);
         }
     }
     
@@ -118,3 +84,4 @@ export class AppComponent implements OnInit {
         this.previousRate = this.rates[i];
     }
 }
+
